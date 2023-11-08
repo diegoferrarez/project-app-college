@@ -1,0 +1,19 @@
+server:
+  port: 8080
+
+spring:
+  base-path: "/students-api"
+  redis:
+    host: "localhost"
+    port: "6379"
+  data:
+    mongodb:
+      auto-index-creation: "true"
+      uri: "mongodb://localhost:27017"
+      database: "students-api"
+
+springdoc:
+  api-docs:
+    path: "/api-docs"
+#  swagger-ui:
+#    path: "/swagger-ui.html"
