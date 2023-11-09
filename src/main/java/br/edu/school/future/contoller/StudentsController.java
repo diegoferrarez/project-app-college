@@ -16,7 +16,7 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/students")
+@RequestMapping("/v1/students")
 public class StudentsController {
 
     @Autowired
