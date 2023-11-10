@@ -1,6 +1,8 @@
 package br.edu.school.future.domain.dto.response;
 
+import br.edu.school.future.domain.FinancePlan;
 import br.edu.school.future.domain.enums.Gender;
+import br.edu.school.future.domain.enums.InfoMessage;
 import br.edu.school.future.domain.enums.SkinType;
 import br.edu.school.future.domain.enums.StatusStudent;
 import lombok.AllArgsConstructor;
@@ -25,5 +27,9 @@ public class RegisterResponse {
     private Gender gender;
     private String numberFone;
     private SkinType type;
+    private FinancePlan value;
     private StatusStudent statusStudent;
+
+    public RegisterResponse(InfoMessage notFoundRegistrationNumber) {
+    }
 }

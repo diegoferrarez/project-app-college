@@ -12,6 +12,8 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FinancePlan {
-    private BigDecimal value;
+    private BigDecimal valueTotal;
+    private BigDecimal discount;
+    private BigDecimal valueMensality;
 
 }

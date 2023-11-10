@@ -26,5 +26,6 @@ public class RegisterStudents {
     private Gender gender;
     private String numberFone;
     private SkinType type;
+    private FinancePlan value;
     private StatusStudent statusStudent;
 }

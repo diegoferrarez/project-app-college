@@ -19,8 +19,6 @@ import java.util.List;
 @Slf4j
 public class FinanceServiceImpl implements FinanceService {
 
-    private static final String NOT_FOUND = "Não localizamos ou não existe a matrícula informada";
-
     private final RegisterStudentsMapper mapper;
     private final ModelMapper modelMapper;
 

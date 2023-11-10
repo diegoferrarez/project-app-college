@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/finance")
+@RequestMapping("/v1/finance")
 public class FinanceController {
 
     @Autowired
@@ -22,7 +22,6 @@ public class FinanceController {
     public Object findByNumberRegistration(@PathVariable String numberRegistration){
         return service.getByNumberRegistration(numberRegistration);
     }
-
 
     @PostMapping("/insertMonthlyValue")
     @ResponseStatus(HttpStatus.OK)

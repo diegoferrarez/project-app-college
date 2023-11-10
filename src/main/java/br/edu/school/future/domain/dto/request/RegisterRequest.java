@@ -1,8 +1,10 @@
 package br.edu.school.future.domain.dto.request;
 
+import br.edu.school.future.domain.FinancePlan;
 import br.edu.school.future.domain.enums.Gender;
 import br.edu.school.future.domain.enums.SkinType;
 import br.edu.school.future.domain.enums.StatusStudent;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,11 +20,13 @@ public class RegisterRequest {
     private String id;
     private String name;
     private String surname;
+    @JsonProperty("matricula")
     private String registrationNumber;
     private String birthDay;
     private int age;
     private Gender gender;
     private String numberFone;
     private SkinType type;
+    private FinancePlan value;
     private StatusStudent statusStudent;
 }
