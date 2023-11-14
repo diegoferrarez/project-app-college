@@ -41,13 +41,13 @@ public class StudentsServiceImpl implements StudentsService {
     @Override
     @Transactional
     public List<RegisterStudents> findByregistrationNumber(String registrationNumber) {
-        return repository.findBynumber(registrationNumber);
+        return repository.findByNumber(registrationNumber);
     }
 
     @Override
     @Transactional
     public Object createStudents(RegisterRequest dto) {
-        var checkNumber = repository.findBynumber(dto.getRegistrationNumber());
+        var checkNumber = repository.findByNumber(dto.getRegistrationNumber());
         if(checkNumber.isEmpty()){
         var formStudents = saveStudent(dto);
         formStudents.setStatusStudent(StatusStudent.ACTIVE);
@@ -62,7 +62,7 @@ public class StudentsServiceImpl implements StudentsService {
     @Override
     @Transactional
     public Object update(String registrationNumber, RegisterRequest dto) {
-        var checkNumber = repository.findBynumber(registrationNumber);
+        var checkNumber = repository.findByNumber(registrationNumber);
         if (checkNumber.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
         } else {
@@ -83,16 +83,21 @@ public class StudentsServiceImpl implements StudentsService {
     }
 
     @Override
-    public Optional<RegisterStudents> changeStatus(String id) {
-        return repository.findById(id).map(formStatus -> {
-           if (formStatus.getStatusStudent() == StatusStudent.ACTIVE){
-               formStatus.setStatusStudent(StatusStudent.INACTIVE);
-           } else {
-               formStatus.setStatusStudent(StatusStudent.ACTIVE);
-           }
-           return repository.save(formStatus);
-        });
-    }
+    public Optional<RegisterStudents> changeStatus(String registrationNumber) {
+        var checkNumber = repository.findByNumber(registrationNumber);
+        if (checkNumber.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
+        }
+            var validate = repository.findBynumberForUpdate(registrationNumber);
+            return repository.findById(validate.getId()).map(formStatus -> {
+                if (formStatus.getStatusStudent() == StatusStudent.ACTIVE) {
+                    formStatus.setStatusStudent(StatusStudent.INACTIVE);
+                } else {
+                    formStatus.setStatusStudent(StatusStudent.ACTIVE);
+                }
+                return repository.save(formStatus);
+            });
+        }
 
 
     private RegisterStudents saveStudent(RegisterRequest register){

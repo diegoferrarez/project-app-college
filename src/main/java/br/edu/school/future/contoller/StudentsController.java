@@ -16,39 +16,39 @@ import java.util.Optional;
 @Slf4j
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/students")
+@RequestMapping("v1/students/")
 public class StudentsController {
 
     @Autowired
     private StudentsService service;
 
-    @GetMapping("/findAllStudents")
+    @GetMapping("findAllStudents")
     @ResponseStatus(HttpStatus.OK)
     public List<RegisterResponse> getall(){
         return service.findAll();
     }
 
-    @GetMapping("/findByRegistration/{registrationNumber}")
+    @GetMapping("findByRegistration/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
     public List<RegisterStudents> getByregistration(@PathVariable String registrationNumber){
         return service.findByregistrationNumber(registrationNumber);
     }
 
-    @PostMapping("/registerStudents")
+    @PostMapping("registerStudents")
     public Object createFormStudent(@RequestBody RegisterRequest request){
         return service.createStudents(request);
     }
 
-    @PutMapping("/updateStudent/{registrationNumber}")
+    @PutMapping("updateStudent/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
     public Object updateStudent(@PathVariable String registrationNumber,
                                                     @RequestBody RegisterRequest request){
         return service.update(registrationNumber, request);
     }
 
-    @PatchMapping("/changeStatusStudent/{id}")
+    @PatchMapping("changeStatusStudent/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<RegisterStudents> inactiveOrActive(@PathVariable String id){
-        return service.changeStatus(id);
+    public Optional<RegisterStudents> inactiveOrActive(@PathVariable String registrationNumber){
+        return service.changeStatus(registrationNumber);
     }
 }

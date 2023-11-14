@@ -17,5 +17,5 @@ public interface StudentsService {
 
     Object update(String registrationNumber, RegisterRequest request);
 
-    Optional<RegisterStudents> changeStatus(String id);
+    Optional<RegisterStudents> changeStatus(String registrationNumber);
 }
