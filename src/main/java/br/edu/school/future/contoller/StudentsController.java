@@ -28,17 +28,22 @@ public class StudentsController {
         return service.findAll();
     }
 
+    @GetMapping("/findByRegistration/{registrationNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public List<RegisterStudents> getByregistration(@PathVariable String registrationNumber){
+        return service.findByregistrationNumber(registrationNumber);
+    }
+
     @PostMapping("/registerStudents")
-    @ResponseStatus(HttpStatus.CREATED)
-    public RegisterResponse createFormStudent(@RequestBody RegisterRequest request){
+    public Object createFormStudent(@RequestBody RegisterRequest request){
         return service.createStudents(request);
     }
 
-    @PutMapping("/updateStudent/{id}")
+    @PutMapping("/updateStudent/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<RegisterStudents> updateStudent(@PathVariable String id,
+    public Object updateStudent(@PathVariable String registrationNumber,
                                                     @RequestBody RegisterRequest request){
-        return service.update(id, request);
+        return service.update(registrationNumber, request);
     }
 
     @PatchMapping("/changeStatusStudent/{id}")

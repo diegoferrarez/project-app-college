@@ -11,9 +11,11 @@ public interface StudentsService {
 
     List<RegisterResponse> findAll();
 
-    RegisterResponse createStudents(RegisterRequest request);
+    List<RegisterStudents> findByregistrationNumber(String registrationNUmber);
 
-    Optional<RegisterStudents> update(String id, RegisterRequest request);
+    Object createStudents(RegisterRequest request);
+
+    Object update(String registrationNumber, RegisterRequest request);
 
     Optional<RegisterStudents> changeStatus(String id);
 }

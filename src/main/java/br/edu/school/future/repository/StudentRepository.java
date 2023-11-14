@@ -10,6 +10,9 @@ import java.util.List;
 @Repository
 public interface StudentRepository extends MongoRepository<RegisterStudents, String>{
 
-    @Query("{ 'numberRegistration' : ?0 }")
-    List<RegisterStudents> findByNumberRegistration(String NumberRegistration);
+    @Query("{'registrationNumber':?0}")
+    List<RegisterStudents> findBynumber(String registrationNumber);
+
+    @Query("{'registrationNumber':?0}")
+    RegisterStudents findBynumberForUpdate(String registrationNumber);
 }

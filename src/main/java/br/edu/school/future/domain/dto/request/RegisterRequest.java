@@ -16,11 +16,11 @@ import org.springframework.data.annotation.Id;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequest {
+
     @Id
     private String id;
     private String name;
     private String surname;
-    @JsonProperty("matricula")
     private String registrationNumber;
     private String birthDay;
     private int age;
