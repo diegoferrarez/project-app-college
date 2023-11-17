@@ -6,7 +6,7 @@ import br.edu.school.future.domain.dto.response.RegisterResponse;
 import br.edu.school.future.domain.enums.StatusStudent;
 import br.edu.school.future.repository.StudentRepository;
 import br.edu.school.future.service.StudentsService;
-import br.edu.school.future.util.mapper.RegisterStudentsMapper;
+import br.edu.school.future.util.mapper.MapperConfig;
 import br.edu.school.future.util.message.InfoMessages;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
@@ -24,7 +24,7 @@ import java.util.Optional;
 @Slf4j
 public class StudentsServiceImpl implements StudentsService {
 
-    private final RegisterStudentsMapper mapper;
+    private final MapperConfig mapper;
     private final ModelMapper modelMapper;
 
     @Autowired
@@ -114,7 +114,7 @@ public class StudentsServiceImpl implements StudentsService {
                 .build();
     }
 
-    public StudentsServiceImpl(RegisterStudentsMapper mapper, ModelMapper modelMapper) {
+    public StudentsServiceImpl(MapperConfig mapper, ModelMapper modelMapper) {
         this.mapper = mapper;
         this.modelMapper = modelMapper;
     }
