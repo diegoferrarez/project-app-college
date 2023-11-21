@@ -46,6 +46,13 @@ public class StudentsController {
         return service.update(registrationNumber, request);
     }
 
+    @PutMapping("selectSubjects/{registrationNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public Object updateRegisterSubject(@PathVariable String registrationNumber,
+                                        @RequestBody RegisterRequest request){
+        return service.registerSubjects(registrationNumber, request);
+    }
+
     @PatchMapping("changeStatusStudent/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<RegisterStudents> inactiveOrActive(@PathVariable String registrationNumber){

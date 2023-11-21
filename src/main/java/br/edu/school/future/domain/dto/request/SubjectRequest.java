@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -14,6 +16,8 @@ public class SubjectRequest {
     private String idSubject;
     private String nameSubject;
     private int workload;
+    private List<String> grade;
+    private String media;
 }
 
 

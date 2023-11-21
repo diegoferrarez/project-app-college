@@ -1,10 +1,13 @@
 package br.edu.school.future.service.impl;
 
 import br.edu.school.future.domain.RegisterStudents;
+import br.edu.school.future.domain.Subjects;
 import br.edu.school.future.domain.dto.request.RegisterRequest;
+import br.edu.school.future.domain.dto.request.SubjectRequest;
 import br.edu.school.future.domain.dto.response.RegisterResponse;
 import br.edu.school.future.domain.enums.StatusStudent;
 import br.edu.school.future.repository.StudentRepository;
+import br.edu.school.future.repository.SubjectRepository;
 import br.edu.school.future.service.StudentsService;
 import br.edu.school.future.util.mapper.MapperConfig;
 import br.edu.school.future.util.message.InfoMessages;
@@ -15,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,33 +32,42 @@ public class StudentsServiceImpl implements StudentsService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    private StudentRepository repository;
+    private StudentRepository studentRepository;
+
+    @Autowired
+    private SubjectRepository subjectRepository;
 
     @Override
     @Transactional
     public List<RegisterResponse> findAll(){
         ModelMapper mapper = new ModelMapper();
-        List<RegisterStudents> studentsList = repository.findAll();
+        List<RegisterStudents> studentsList = studentRepository.findAll();
         return Arrays.asList(modelMapper.map(studentsList, RegisterResponse[].class));
     }
 
     @Override
     @Transactional
     public List<RegisterStudents> findByregistrationNumber(String registrationNumber) {
-        return repository.findByNumber(registrationNumber);
+        return studentRepository.findByNumber(registrationNumber);
     }
 
     @Override
     @Transactional
     public Object createStudents(RegisterRequest dto) {
-        var checkNumber = repository.findByNumber(dto.getRegistrationNumber());
+
+        var checkNumber = studentRepository.findByNumber(dto.getRegistrationNumber());
+
+        var subjects =  subjectRepository.findAll();
+
         if(checkNumber.isEmpty()){
-        var formStudents = saveStudent(dto);
-        formStudents.setStatusStudent(StatusStudent.ACTIVE);
-        formStudents.getValue().setValueMensality(dto.getValue().getValueTotal().subtract(dto.getValue().getDiscount()));
-        var registerStudentsDatabase = this.repository.save(formStudents);
-        return this.mapper.toResponse(HttpStatus.OK, registerStudentsDatabase);
-    } else {
+            var formStudents = saveStudent(dto);
+            formStudents.setSubjects(subjects);
+            formStudents.setStatusStudent(StatusStudent.ACTIVE);
+            formStudents.getValue().setValueMensality(dto.getValue().getValueTotal().subtract(dto.getValue().getDiscount()));
+            var registerStudentsDatabase = this.studentRepository.save(formStudents);
+            return this.mapper.toResponse(HttpStatus.OK, registerStudentsDatabase);
+
+        } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessages.FOUND_NUMBER_REPOSITORY);
         }
     }
@@ -62,12 +75,12 @@ public class StudentsServiceImpl implements StudentsService {
     @Override
     @Transactional
     public Object update(String registrationNumber, RegisterRequest dto) {
-        var checkNumber = repository.findByNumber(registrationNumber);
+        var checkNumber = studentRepository.findByNumber(registrationNumber);
         if (checkNumber.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
         } else {
-            var validate = repository.findBynumberForUpdate(registrationNumber);
-            return repository.findById(validate.getId()).map(form -> {
+            var validate = studentRepository.findBynumberForUpdate(registrationNumber);
+            return studentRepository.findById(validate.getId()).map(form -> {
                 form.setName(dto.getName());
                 form.setSurname(dto.getSurname());
                 form.setRegistrationNumber(dto.getRegistrationNumber());
@@ -77,28 +90,53 @@ public class StudentsServiceImpl implements StudentsService {
                 form.setNumberFone(dto.getNumberFone());
                 form.setValue(dto.getValue());
                 form.setType(dto.getType());
-                return repository.save(form);
+                return studentRepository.save(form);
+            });
+        }
+    }
+
+    @Override
+    @Transactional
+    public Object registerSubjects(String registrationNumber, RegisterRequest dto) {
+        var checkNumber = studentRepository.findByNumber(registrationNumber);
+        if (checkNumber.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
+        } else {
+
+            var validate = studentRepository.findBynumberForUpdate(registrationNumber);
+
+            return studentRepository.findById(validate.getId()).map(form -> {
+                form.setName(dto.getName());
+                form.setSurname(dto.getSurname());
+                form.setRegistrationNumber(dto.getRegistrationNumber());
+                form.setBirthDay(dto.getBirthDay());
+                form.setAge(dto.getAge());
+                form.setGender(dto.getGender());
+                form.setNumberFone(dto.getNumberFone());
+                form.setValue(dto.getValue());
+                form.setType(dto.getType());
+
+                return studentRepository.save(form);
             });
         }
     }
 
     @Override
     public Optional<RegisterStudents> changeStatus(String registrationNumber) {
-        var checkNumber = repository.findByNumber(registrationNumber);
+        var checkNumber = studentRepository.findByNumber(registrationNumber);
         if (checkNumber.isEmpty()) {
             ResponseEntity.status(HttpStatus.NO_CONTENT).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
         }
-            var validate = repository.findBynumberForUpdate(registrationNumber);
-            return repository.findById(validate.getId()).map(formStatus -> {
+            var validate = studentRepository.findBynumberForUpdate(registrationNumber);
+            return studentRepository.findById(validate.getId()).map(formStatus -> {
                 if (formStatus.getStatusStudent() == StatusStudent.ACTIVE) {
                     formStatus.setStatusStudent(StatusStudent.INACTIVE);
                 } else {
                     formStatus.setStatusStudent(StatusStudent.ACTIVE);
                 }
-                return repository.save(formStatus);
+                return studentRepository.save(formStatus);
             });
         }
-
 
     private RegisterStudents saveStudent(RegisterRequest register){
         return RegisterStudents.builder()

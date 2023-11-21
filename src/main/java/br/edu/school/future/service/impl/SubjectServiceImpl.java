@@ -2,6 +2,7 @@ package br.edu.school.future.service.impl;
 
 import br.edu.school.future.domain.Subjects;
 import br.edu.school.future.domain.dto.request.SubjectRequest;
+import br.edu.school.future.domain.dto.response.RegisterResponse;
 import br.edu.school.future.domain.dto.response.SubjectResponse;
 import br.edu.school.future.repository.SubjectRepository;
 import br.edu.school.future.service.SubjectService;
@@ -11,6 +12,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -24,12 +28,17 @@ public class SubjectServiceImpl implements SubjectService {
     private SubjectRepository repository;
 
     @Override
-    public SubjectResponse insertSubject(SubjectRequest dto) {
-        var prepareSubject = saveSubject(dto);
-        var saveSubjectDataBase =  this.repository.save(prepareSubject);
-        return this.mapper.toResponseSubject(HttpStatus.CREATED, saveSubjectDataBase);
+    public List<SubjectResponse> findAll() {
+        List<Subjects> subjectsList = repository.findAll();
+        return Arrays.asList(ModelMapper.map(subjectsList, SubjectResponse[].class));
     }
 
+    @Override
+    public SubjectResponse insertSubject(SubjectRequest dto) {
+        var prepareSubject = saveSubject(dto);
+        var saveSubjectDataBase = this.repository.save(prepareSubject);
+        return this.mapper.toResponseSubject(HttpStatus.CREATED, saveSubjectDataBase);
+    }
 
     private Subjects saveSubject(SubjectRequest register){
         return Subjects.builder()

@@ -6,9 +6,9 @@ import br.edu.school.future.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -19,8 +19,13 @@ public class SubjectsController {
     @Autowired
     private SubjectService service;
 
+    @GetMapping("searchAllSubjects")
+    public List<SubjectResponse> searchAll(){
+        return service.findAll();
+    }
+
     @PostMapping("insertNewSubject")
-    public SubjectResponse insertSubject(SubjectRequest request){
+    public SubjectResponse insertSubject(@RequestBody SubjectRequest request){
         return service.insertSubject(request);
     }
 }

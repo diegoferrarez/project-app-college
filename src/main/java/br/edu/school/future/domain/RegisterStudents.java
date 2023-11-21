@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Builder
 @AllArgsConstructor
@@ -28,4 +30,5 @@ public class RegisterStudents {
     private SkinType type;
     private FinancePlan value;
     private StatusStudent statusStudent;
+    private List<Subjects> subjects;
 }

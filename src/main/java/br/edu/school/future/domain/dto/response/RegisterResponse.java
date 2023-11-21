@@ -1,6 +1,7 @@
 package br.edu.school.future.domain.dto.response;
 
 import br.edu.school.future.domain.FinancePlan;
+import br.edu.school.future.domain.Subjects;
 import br.edu.school.future.domain.enums.Gender;
 import br.edu.school.future.domain.enums.SkinType;
 import br.edu.school.future.domain.enums.StatusStudent;
@@ -9,6 +10,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+
+import java.util.List;
 
 @Data
 @Builder
@@ -28,5 +31,6 @@ public class RegisterResponse {
     private SkinType type;
     private FinancePlan value;
     private StatusStudent statusStudent;
+    private List<Subjects> subjects;
 
 }
