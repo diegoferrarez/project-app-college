@@ -42,7 +42,7 @@ public class StudentsController {
     @PutMapping("updateStudent/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
     public Object updateStudent(@PathVariable String registrationNumber,
-                                                    @RequestBody RegisterRequest request){
+                                @RequestBody RegisterRequest request){
         return service.update(registrationNumber, request);
     }
 

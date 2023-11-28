@@ -1,7 +1,6 @@
 package br.edu.school.future.domain;
 
 import br.edu.school.future.domain.enums.Gender;
-import br.edu.school.future.domain.enums.SkinType;
 import br.edu.school.future.domain.enums.StatusStudent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -27,8 +24,8 @@ public class RegisterStudents {
     private int age;
     private Gender gender;
     private String numberFone;
-    private SkinType type;
+    private String serieNumber;
     private FinancePlan value;
     private StatusStudent statusStudent;
-    private List<Subjects> subjects;
+    private CurricularStructure curriculum;
 }

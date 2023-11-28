@@ -1,9 +1,9 @@
 package br.edu.school.future.util.mapper;
 
+import br.edu.school.future.domain.CurricularStructure;
 import br.edu.school.future.domain.RegisterStudents;
-import br.edu.school.future.domain.Subjects;
 import br.edu.school.future.domain.dto.response.RegisterResponse;
-import br.edu.school.future.domain.dto.response.SubjectResponse;
+import br.edu.school.future.domain.dto.response.StructureResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -23,8 +23,8 @@ public class MapperConfig {
     }
 
     @SneakyThrows
-    public SubjectResponse toResponseSubject(HttpStatus ok, Subjects subject) {
+    public StructureResponse toResponseSubject(HttpStatus ok, CurricularStructure subject) {
         var json = this.mapper.writeValueAsString(subject);
-        return this.mapper.readValue(json, SubjectResponse.class);
+        return this.mapper.readValue(json, StructureResponse.class);
     }
 }

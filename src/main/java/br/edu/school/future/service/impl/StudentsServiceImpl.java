@@ -1,9 +1,7 @@
 package br.edu.school.future.service.impl;
 
 import br.edu.school.future.domain.RegisterStudents;
-import br.edu.school.future.domain.Subjects;
 import br.edu.school.future.domain.dto.request.RegisterRequest;
-import br.edu.school.future.domain.dto.request.SubjectRequest;
 import br.edu.school.future.domain.dto.response.RegisterResponse;
 import br.edu.school.future.domain.enums.StatusStudent;
 import br.edu.school.future.repository.StudentRepository;
@@ -18,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,17 +53,15 @@ public class StudentsServiceImpl implements StudentsService {
     public Object createStudents(RegisterRequest dto) {
 
         var checkNumber = studentRepository.findByNumber(dto.getRegistrationNumber());
-
-        var subjects =  subjectRepository.findAll();
+        var curricular =  subjectRepository.findBySerie(dto.getSerieNumber());
 
         if(checkNumber.isEmpty()){
             var formStudents = saveStudent(dto);
-            formStudents.setSubjects(subjects);
+            formStudents.setCurriculum(curricular);
             formStudents.setStatusStudent(StatusStudent.ACTIVE);
             formStudents.getValue().setValueMensality(dto.getValue().getValueTotal().subtract(dto.getValue().getDiscount()));
             var registerStudentsDatabase = this.studentRepository.save(formStudents);
             return this.mapper.toResponse(HttpStatus.OK, registerStudentsDatabase);
-
         } else {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessages.FOUND_NUMBER_REPOSITORY);
         }
@@ -89,7 +84,7 @@ public class StudentsServiceImpl implements StudentsService {
                 form.setGender(dto.getGender());
                 form.setNumberFone(dto.getNumberFone());
                 form.setValue(dto.getValue());
-                form.setType(dto.getType());
+                form.setSerieNumber(dto.getSerieNumber());
                 return studentRepository.save(form);
             });
         }
@@ -114,7 +109,7 @@ public class StudentsServiceImpl implements StudentsService {
                 form.setGender(dto.getGender());
                 form.setNumberFone(dto.getNumberFone());
                 form.setValue(dto.getValue());
-                form.setType(dto.getType());
+                form.setSerieNumber(dto.getSerieNumber());
 
                 return studentRepository.save(form);
             });
@@ -147,7 +142,7 @@ public class StudentsServiceImpl implements StudentsService {
                 .birthDay(register.getBirthDay())
                 .numberFone(register.getNumberFone())
                 .gender(register.getGender())
-                .type(register.getType())
+                .serieNumber(register.getSerieNumber())
                 .value(register.getValue())
                 .build();
     }

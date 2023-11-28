@@ -1,7 +1,7 @@
 package br.edu.school.future.contoller;
 
-import br.edu.school.future.domain.dto.request.SubjectRequest;
-import br.edu.school.future.domain.dto.response.SubjectResponse;
+import br.edu.school.future.domain.dto.request.StructureRequest;
+import br.edu.school.future.domain.dto.response.StructureResponse;
 import br.edu.school.future.service.SubjectService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +20,12 @@ public class SubjectsController {
     private SubjectService service;
 
     @GetMapping("searchAllSubjects")
-    public List<SubjectResponse> searchAll(){
+    public List<StructureResponse> searchAll(){
         return service.findAll();
     }
 
     @PostMapping("insertNewSubject")
-    public SubjectResponse insertSubject(@RequestBody SubjectRequest request){
+    public StructureResponse insertSubject(@RequestBody StructureRequest request){
         return service.insertSubject(request);
     }
 }

@@ -1,9 +1,9 @@
 package br.edu.school.future.service.impl;
 
+import br.edu.school.future.domain.CurricularStructure;
 import br.edu.school.future.domain.Subjects;
-import br.edu.school.future.domain.dto.request.SubjectRequest;
-import br.edu.school.future.domain.dto.response.RegisterResponse;
-import br.edu.school.future.domain.dto.response.SubjectResponse;
+import br.edu.school.future.domain.dto.request.StructureRequest;
+import br.edu.school.future.domain.dto.response.StructureResponse;
 import br.edu.school.future.repository.SubjectRepository;
 import br.edu.school.future.service.SubjectService;
 import br.edu.school.future.util.mapper.MapperConfig;
@@ -28,23 +28,22 @@ public class SubjectServiceImpl implements SubjectService {
     private SubjectRepository repository;
 
     @Override
-    public List<SubjectResponse> findAll() {
-        List<Subjects> subjectsList = repository.findAll();
-        return Arrays.asList(ModelMapper.map(subjectsList, SubjectResponse[].class));
+    public List<StructureResponse> findAll() {
+        List<CurricularStructure> subjectsList = repository.findAll();
+        return Arrays.asList(ModelMapper.map(subjectsList, StructureResponse[].class));
     }
 
     @Override
-    public SubjectResponse insertSubject(SubjectRequest dto) {
+    public StructureResponse insertSubject(StructureRequest dto) {
         var prepareSubject = saveSubject(dto);
         var saveSubjectDataBase = this.repository.save(prepareSubject);
         return this.mapper.toResponseSubject(HttpStatus.CREATED, saveSubjectDataBase);
     }
 
-    private Subjects saveSubject(SubjectRequest register){
-        return Subjects.builder()
-                .idSubject(register.getIdSubject())
-                .nameSubject(register.getNameSubject())
-                .workload(register.getWorkload())
+    private CurricularStructure saveSubject(StructureRequest register){
+        return CurricularStructure.builder()
+                .curricularStructure(register.getCurricularStructure())
+                .subjects(register.getSubjects())
                 .build();
     }
 
