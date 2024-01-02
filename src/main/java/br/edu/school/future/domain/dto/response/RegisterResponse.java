@@ -2,14 +2,14 @@ package br.edu.school.future.domain.dto.response;
 
 import br.edu.school.future.domain.CurricularStructure;
 import br.edu.school.future.domain.FinancePlan;
-import br.edu.school.future.domain.enums.Gender;
-import br.edu.school.future.domain.enums.SkinType;
 import br.edu.school.future.domain.enums.StatusStudent;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
+
+import java.time.LocalDate;
 
 @Data
 @Builder
@@ -22,9 +22,7 @@ public class RegisterResponse {
     private String name;
     private String surname;
     private String registrationNumber;
-    private String birthDay;
-    private int age;
-    private Gender gender;
+    private LocalDate birthDay;
     private String numberFone;
     private String serieNumber;
     private FinancePlan value;

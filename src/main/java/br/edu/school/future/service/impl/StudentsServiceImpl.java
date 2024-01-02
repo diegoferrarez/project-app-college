@@ -10,6 +10,7 @@ import br.edu.school.future.service.StudentsService;
 import br.edu.school.future.util.mapper.MapperConfig;
 import br.edu.school.future.util.message.InfoMessages;
 import lombok.extern.slf4j.Slf4j;
+import net.bytebuddy.asm.Advice;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -37,6 +42,7 @@ public class StudentsServiceImpl implements StudentsService {
     @Override
     @Transactional
     public List<RegisterResponse> findAll(){
+
         ModelMapper mapper = new ModelMapper();
         List<RegisterStudents> studentsList = studentRepository.findAll();
         return Arrays.asList(modelMapper.map(studentsList, RegisterResponse[].class));
@@ -55,11 +61,18 @@ public class StudentsServiceImpl implements StudentsService {
         var checkNumber = studentRepository.findByNumber(dto.getRegistrationNumber());
         var curricular =  subjectRepository.findBySerie(dto.getSerieNumber());
 
+        Period period = Period.between(dto.getBirthDay(), LocalDate.now());
+        int age = period.getYears();
+
         if(checkNumber.isEmpty()){
+
             var formStudents = saveStudent(dto);
+
             formStudents.setCurriculum(curricular);
+            formStudents.setAge(age);
             formStudents.setStatusStudent(StatusStudent.ACTIVE);
-            formStudents.getValue().setValueMensality(dto.getValue().getValueTotal().subtract(dto.getValue().getDiscount()));
+//            formStudents.getValue().setValueMensality(dto.getValue().getValueTotal().subtract(dto.getValue().getDiscount()));
+
             var registerStudentsDatabase = this.studentRepository.save(formStudents);
             return this.mapper.toResponse(HttpStatus.OK, registerStudentsDatabase);
         } else {
@@ -70,7 +83,13 @@ public class StudentsServiceImpl implements StudentsService {
     @Override
     @Transactional
     public Object update(String registrationNumber, RegisterRequest dto) {
+
         var checkNumber = studentRepository.findByNumber(registrationNumber);
+        var dateBirthSave = dto.getBirthDay();
+
+        Period updateAge = Period.between(dateBirthSave, LocalDate.now());
+        int age = updateAge.getYears();
+
         if (checkNumber.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
         } else {
@@ -78,10 +97,9 @@ public class StudentsServiceImpl implements StudentsService {
             return studentRepository.findById(validate.getId()).map(form -> {
                 form.setName(dto.getName());
                 form.setSurname(dto.getSurname());
-                form.setRegistrationNumber(dto.getRegistrationNumber());
+                form.setRegistrationNumber(registrationNumber);
                 form.setBirthDay(dto.getBirthDay());
-                form.setAge(dto.getAge());
-                form.setGender(dto.getGender());
+                form.setAge(age);
                 form.setNumberFone(dto.getNumberFone());
                 form.setValue(dto.getValue());
                 form.setSerieNumber(dto.getSerieNumber());
@@ -106,7 +124,6 @@ public class StudentsServiceImpl implements StudentsService {
                 form.setRegistrationNumber(dto.getRegistrationNumber());
                 form.setBirthDay(dto.getBirthDay());
                 form.setAge(dto.getAge());
-                form.setGender(dto.getGender());
                 form.setNumberFone(dto.getNumberFone());
                 form.setValue(dto.getValue());
                 form.setSerieNumber(dto.getSerieNumber());
@@ -141,7 +158,6 @@ public class StudentsServiceImpl implements StudentsService {
                 .age(register.getAge())
                 .birthDay(register.getBirthDay())
                 .numberFone(register.getNumberFone())
-                .gender(register.getGender())
                 .serieNumber(register.getSerieNumber())
                 .value(register.getValue())
                 .build();
