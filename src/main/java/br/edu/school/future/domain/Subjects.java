@@ -14,9 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Subjects implements Serializable {
-    private String idSubject;
     private String nameSubject;
-    private int workload;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<String> note;
     @JsonInclude(JsonInclude.Include.NON_NULL)

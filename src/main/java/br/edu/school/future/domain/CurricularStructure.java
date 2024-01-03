@@ -16,4 +16,5 @@ import java.util.List;
 public class CurricularStructure {
     private String curricularStructure;
     private List<Subjects> subjects;
+    private int workload;
 }

@@ -21,6 +21,12 @@ public class AcademicController {
     @Autowired
     private AcademicService service;
 
+    @PatchMapping("insertCurriculum/{registrationNumber}")
+    @ResponseStatus(HttpStatus.OK)
+    public Optional<?> curriculumRegister(){
+        return null;
+    }
+
     @PatchMapping("insertNote/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
     public Optional<RegisterStudents> insertNoteStudent(@PathVariable String registrationNumber,

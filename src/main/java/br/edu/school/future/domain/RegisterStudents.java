@@ -22,7 +22,6 @@ public class RegisterStudents {
     private String surname;
     private String registrationNumber;
     private LocalDate birthDay;
-    private int age;
     private String numberFone;
     private String serieNumber;
     private FinancePlan value;

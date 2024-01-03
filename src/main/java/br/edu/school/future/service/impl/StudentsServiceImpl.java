@@ -61,15 +61,11 @@ public class StudentsServiceImpl implements StudentsService {
         var checkNumber = studentRepository.findByNumber(dto.getRegistrationNumber());
         var curricular =  subjectRepository.findBySerie(dto.getSerieNumber());
 
-        Period period = Period.between(dto.getBirthDay(), LocalDate.now());
-        int age = period.getYears();
-
         if(checkNumber.isEmpty()){
 
             var formStudents = saveStudent(dto);
 
             formStudents.setCurriculum(curricular);
-            formStudents.setAge(age);
             formStudents.setStatusStudent(StatusStudent.ACTIVE);
 //            formStudents.getValue().setValueMensality(dto.getValue().getValueTotal().subtract(dto.getValue().getDiscount()));
 
@@ -85,10 +81,6 @@ public class StudentsServiceImpl implements StudentsService {
     public Object update(String registrationNumber, RegisterRequest dto) {
 
         var checkNumber = studentRepository.findByNumber(registrationNumber);
-        var dateBirthSave = dto.getBirthDay();
-
-        Period updateAge = Period.between(dateBirthSave, LocalDate.now());
-        int age = updateAge.getYears();
 
         if (checkNumber.isEmpty()) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
@@ -99,13 +91,29 @@ public class StudentsServiceImpl implements StudentsService {
                 form.setSurname(dto.getSurname());
                 form.setRegistrationNumber(registrationNumber);
                 form.setBirthDay(dto.getBirthDay());
-                form.setAge(age);
                 form.setNumberFone(dto.getNumberFone());
                 form.setValue(dto.getValue());
                 form.setSerieNumber(dto.getSerieNumber());
                 return studentRepository.save(form);
             });
         }
+    }
+
+    @Override
+    public Optional<RegisterStudents> changeStatus(String registrationNumber) {
+        var checkNumber = studentRepository.findByNumber(registrationNumber);
+        if (checkNumber.isEmpty()) {
+            ResponseEntity.status(HttpStatus.NO_CONTENT).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
+        }
+        var validate = studentRepository.findBynumberForUpdate(registrationNumber);
+        return studentRepository.findById(validate.getId()).map(formStatus -> {
+            if (formStatus.getStatusStudent() == StatusStudent.ACTIVE) {
+                formStatus.setStatusStudent(StatusStudent.INACTIVE);
+            } else {
+                formStatus.setStatusStudent(StatusStudent.ACTIVE);
+            }
+            return studentRepository.save(formStatus);
+        });
     }
 
     @Override
@@ -123,7 +131,6 @@ public class StudentsServiceImpl implements StudentsService {
                 form.setSurname(dto.getSurname());
                 form.setRegistrationNumber(dto.getRegistrationNumber());
                 form.setBirthDay(dto.getBirthDay());
-                form.setAge(dto.getAge());
                 form.setNumberFone(dto.getNumberFone());
                 form.setValue(dto.getValue());
                 form.setSerieNumber(dto.getSerieNumber());
@@ -133,29 +140,11 @@ public class StudentsServiceImpl implements StudentsService {
         }
     }
 
-    @Override
-    public Optional<RegisterStudents> changeStatus(String registrationNumber) {
-        var checkNumber = studentRepository.findByNumber(registrationNumber);
-        if (checkNumber.isEmpty()) {
-            ResponseEntity.status(HttpStatus.NO_CONTENT).body(InfoMessages.NOT_FOUND_NUMBER_REPOSITORY);
-        }
-            var validate = studentRepository.findBynumberForUpdate(registrationNumber);
-            return studentRepository.findById(validate.getId()).map(formStatus -> {
-                if (formStatus.getStatusStudent() == StatusStudent.ACTIVE) {
-                    formStatus.setStatusStudent(StatusStudent.INACTIVE);
-                } else {
-                    formStatus.setStatusStudent(StatusStudent.ACTIVE);
-                }
-                return studentRepository.save(formStatus);
-            });
-        }
-
     private RegisterStudents saveStudent(RegisterRequest register){
         return RegisterStudents.builder()
                 .name(register.getName())
                 .surname(register.getSurname())
                 .registrationNumber(register.getRegistrationNumber())
-                .age(register.getAge())
                 .birthDay(register.getBirthDay())
                 .numberFone(register.getNumberFone())
                 .serieNumber(register.getSerieNumber())
