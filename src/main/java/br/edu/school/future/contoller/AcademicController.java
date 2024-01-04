@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Slf4j
@@ -21,10 +22,13 @@ public class AcademicController {
     @Autowired
     private AcademicService service;
 
-    @PatchMapping("insertCurriculum/{registrationNumber}")
+    @PatchMapping("price/insertFinancialPlan/{registrationNumber}")
     @ResponseStatus(HttpStatus.OK)
-    public Optional<?> curriculumRegister(){
-        return null;
+    public Optional<RegisterStudents> curriculumRegister(@PathVariable String registrationNumber,
+                                                         @RequestParam String typeDiscount,
+                                                         @RequestParam BigDecimal value,
+                                                         @RequestParam BigDecimal discount){
+        return service.insertValuePlan(registrationNumber, typeDiscount, discount, value);
     }
 
     @PatchMapping("insertNote/{registrationNumber}")

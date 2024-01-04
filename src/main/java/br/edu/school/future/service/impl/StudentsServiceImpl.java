@@ -67,8 +67,6 @@ public class StudentsServiceImpl implements StudentsService {
 
             formStudents.setCurriculum(curricular);
             formStudents.setStatusStudent(StatusStudent.ACTIVE);
-//            formStudents.getValue().setValueMensality(dto.getValue().getValueTotal().subtract(dto.getValue().getDiscount()));
-
             var registerStudentsDatabase = this.studentRepository.save(formStudents);
             return this.mapper.toResponse(HttpStatus.OK, registerStudentsDatabase);
         } else {
